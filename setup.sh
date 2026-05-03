@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ---------------------------------------------------------------
-# Laravel Starter – one-command project setup
+# Cezanne - one-command project setup
 # Usage: bash setup.sh [--demo] [--skip-npm]
 # ---------------------------------------------------------------
 
@@ -9,7 +9,7 @@ set -e
 echo ""
 echo "╔════════════════════════════════════════════════════╗"
 echo "║                                                    ║"
-echo "║        Laravel Starter – Project Setup             ║"
+echo "║        Cezanne - Project Setup                     ║"
 echo "║                                                    ║"
 echo "╚════════════════════════════════════════════════════╝"
 echo ""

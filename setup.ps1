@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------
-# Laravel Starter – one-command project setup (Windows PowerShell)
+# Cezanne - one-command project setup (Windows PowerShell)
 # Usage: .\setup.ps1 [--demo] [--skip-npm]
 # ---------------------------------------------------------------
 
@@ -8,7 +8,7 @@ $ErrorActionPreference = "Stop"
 Write-Host ""
 Write-Host "╔════════════════════════════════════════════════════╗"
 Write-Host "║                                                    ║"
-Write-Host "║        Laravel Starter – Project Setup             ║"
+Write-Host "║        Cezanne - Project Setup                     ║"
 Write-Host "║                                                    ║"
 Write-Host "╚════════════════════════════════════════════════════╝"
 Write-Host ""

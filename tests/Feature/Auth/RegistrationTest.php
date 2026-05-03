@@ -3,7 +3,9 @@
 namespace Tests\Feature\Auth;
 
 use App\Livewire\Auth\Register;
+use App\Models\User;
 use App\Notifications\NewRegistrationNotification;
+use App\Notifications\NewRegistrationNotificationForSocial;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Livewire\Livewire;
@@ -45,6 +47,20 @@ class RegistrationTest extends TestCase
         } else {
             $response = $this->get('/register');
             $response->assertStatus(404);
+        }
+    }
+
+    public function test_registration_database_notifications_use_existing_profile_routes(): void
+    {
+        $user = User::factory()->create([
+            'username' => '100009',
+        ]);
+
+        foreach ([new NewRegistrationNotification, new NewRegistrationNotificationForSocial] as $notification) {
+            $payload = $notification->toDatabase($user);
+
+            $this->assertSame(route('backend.users.show', $user->id), $payload['url_backend']);
+            $this->assertSame(route('frontend.users.profile', $user->username), $payload['url_frontend']);
         }
     }
 }

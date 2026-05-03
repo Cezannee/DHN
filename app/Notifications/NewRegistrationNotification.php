@@ -78,8 +78,8 @@ class NewRegistrationNotification extends Notification
 
         $text = 'Registration Completed! | New registration completed for <strong>'.$user->name.'</strong>';
 
-        $url_backend = route('backend.users.profile', $user->id);
-        $url_frontend = route('frontend.users.profile', $user->id);
+        $url_backend = route('backend.users.show', $user->id);
+        $url_frontend = route('frontend.users.profile', $user->username);
 
         return [
             'title' => 'Registration Completed!',

@@ -25,7 +25,7 @@ class StarterInstallCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Install and configure Laravel Starter';
+    protected $description = 'Install and configure Cezanne';
 
     /**
      * Execute the console command.
@@ -77,7 +77,7 @@ class StarterInstallCommand extends Command
         $this->newLine();
         $this->line('╔════════════════════════════════════════════════════╗');
         $this->line('║                                                    ║');
-        $this->line('║        <fg=bright-blue>Laravel Starter Installation</fg=bright-blue>              ║');
+        $this->line('║        <fg=bright-blue>Cezanne Installation</fg=bright-blue>                      ║');
         $this->line('║                                                    ║');
         $this->line('╚════════════════════════════════════════════════════╝');
         $this->newLine();
