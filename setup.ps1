@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------
-# Cezanne - one-command project setup (Windows PowerShell)
+# Digi Herba - one-command project setup (Windows PowerShell)
 # Usage: .\setup.ps1 [--demo] [--skip-npm]
 # ---------------------------------------------------------------
 
@@ -8,7 +8,7 @@ $ErrorActionPreference = "Stop"
 Write-Host ""
 Write-Host "╔════════════════════════════════════════════════════╗"
 Write-Host "║                                                    ║"
-Write-Host "║        Cezanne - Project Setup                     ║"
+Write-Host "║        Digi Herba - Project Setup                  ║"
 Write-Host "║                                                    ║"
 Write-Host "╚════════════════════════════════════════════════════╝"
 Write-Host ""

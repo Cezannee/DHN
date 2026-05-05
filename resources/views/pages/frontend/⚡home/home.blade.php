@@ -15,7 +15,7 @@
             <div class="mb-8 flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-x-4 sm:space-y-0 lg:mb-16">
                 <a
                     class="inline-flex items-center justify-center rounded-lg bg-gray-700 px-5 py-3 text-center text-base font-medium text-white hover:bg-gray-800 focus:ring-4 focus:ring-gray-300"
-                    href="https://github.com/Cezannee"
+                    href="{{ setting('website_url') ?: config('app.url') }}"
                     target="_blank"
                 >
                     <svg
@@ -35,11 +35,11 @@
                             d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"
                         />
                     </svg>
-                    <span class="ms-2">Github</span>
+                    <span class="ms-2">Website</span>
                 </a>
                 <a
                     class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-5 py-3 text-center text-base font-medium text-gray-900 hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:border-gray-700 dark:text-gray-700 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-800"
-                    href="https://github.com/Cezannee"
+                    href="{{ setting('website_url') ?: config('app.url') }}"
                     target="_blank"
                 >
                     <svg
@@ -65,7 +65,7 @@
                         <path d="M17 10l1 4l1.5 -4l1.5 4l1 -4" />
                         <path d="M9.5 10l1 4l1.5 -4l1.5 4l1 -4" />
                     </svg>
-                    <span class="ms-2">Profile</span>
+                    <span class="ms-2">Company Profile</span>
                 </a>
             </div>
 

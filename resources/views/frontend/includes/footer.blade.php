@@ -6,7 +6,10 @@
             wire:navigate
             aria-label="Go to homepage"
         >
-            <img class="h-10 rounded" src="{{ asset("img/logo-with-text.jpg") }}" alt="{{ app_name() }} Logo" />
+            <picture>
+                <source media="(min-width: 768px)" srcset="{{ asset("img/logo-square.jpg") }}" />
+                <img class="h-10 rounded md:h-16 lg:h-20" src="{{ asset("img/logo-with-text.jpg") }}" alt="{{ app_name() }} Logo" />
+            </picture>
         </a>
         <p class="mx-auto my-6 text-gray-500 sm:w-1/2 dark:text-gray-400">
             {!! setting("meta_description") !!}

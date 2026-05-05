@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ---------------------------------------------------------------
-# Cezanne - one-command project setup
+# Digi Herba - one-command project setup
 # Usage: bash setup.sh [--demo] [--skip-npm]
 # ---------------------------------------------------------------
 
@@ -9,7 +9,7 @@ set -e
 echo ""
 echo "╔════════════════════════════════════════════════════╗"
 echo "║                                                    ║"
-echo "║        Cezanne - Project Setup                     ║"
+echo "║        Digi Herba - Project Setup                  ║"
 echo "║                                                    ║"
 echo "╚════════════════════════════════════════════════════╝"
 echo ""

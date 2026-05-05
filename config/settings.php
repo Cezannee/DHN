@@ -15,7 +15,7 @@ return [
                     'label' => 'App Name', // you know what label it is
                     'rules' => 'required|min:2|max:50', // validation rule of laravel
                     'class' => '', // any class for input
-                    'value' => 'Cezanne', // default value if you want
+                    'value' => 'Digi Herba Nusantara', // default value if you want
                 ],
                 [
                     'type' => 'text', // input fields type
@@ -33,7 +33,7 @@ return [
                     'label' => 'Footer Text', // you know what label it is
                     'rules' => 'required|min:2', // validation rule of laravel
                     'class' => '', // any class for input
-                    'value' => '<a href="https://github.com/Cezannee" class="text-muted">Build with love by Cezanne</a>', // default value if you want
+                    'value' => 'Digi Herba Nusantara', // default value if you want
                 ],
                 [
                     'type' => 'checkbox', // input fields type
@@ -128,7 +128,7 @@ return [
                     'label' => 'Website URL', // you know what label it is
                     'rules' => 'nullable|max:191', // validation rule of laravel
                     'class' => '', // any class for input
-                    'value' => 'https://github.com/Cezannee', // default value if you want
+                    'value' => '', // default value if you want
                 ],
                 [
                     'type' => 'text', // input fields type
@@ -209,7 +209,7 @@ return [
                     'label' => 'Meta Site Name', // you know what label it is
                     'rules' => 'required', // validation rule of laravel
                     'class' => '', // any class for input
-                    'value' => 'Cezanne', // default value if you want
+                    'value' => 'Digi Herba Nusantara', // default value if you want
                 ],
                 [
                     'type' => 'text', // input fields type
@@ -227,7 +227,7 @@ return [
                     'label' => 'Meta Keyword', // you know what label it is
                     'rules' => 'nullable', // validation rule of laravel
                     'class' => '', // any class for input
-                    'value' => 'Cezanne, Laravel, Web Application', // default value if you want
+                    'value' => 'Digi Herba Nusantara, herbal, organic products', // default value if you want
                 ],
                 [
                     'type' => 'text', // input fields type

@@ -54,6 +54,5 @@
 <meta name="twitter:image" content="{{ asset(setting("meta_image")) }}" />
 
 <!--canonical link-->
-<link type="text/plain" rel="author" href="{{ asset("humans.txt") }}" />
-<meta name="generator" content="Cezanne" />
+<meta name="generator" content="{{ config("app.name") }}" />
 <link rel="canonical" href="{{ url()->full() }}" />

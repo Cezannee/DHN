@@ -51,7 +51,7 @@ copy .env.example .env
 php artisan key:generate
 ```
 
-6. Jalankan installer khusus Cezanne.
+6. Jalankan installer proyek.
 
 ```bash
 php artisan starter:install --no-interaction
@@ -74,7 +74,7 @@ Kemudian akses aplikasi melalui URL yang ditampilkan oleh `php artisan serve`.
 
 ## Perintah Penting
 
-* `php artisan starter:install` — install dan konfigurasi Cezanne
+* `php artisan starter:install` — install dan konfigurasi Digi Herba Nusantara
 * `php artisan starter:update` — update paket Composer, jalankan migrasi baru, dan bersihkan cache
 * `php artisan clear-all` — bersihkan cache aplikasi, route, view, config, dan permission cache
 * `composer pint` — jalankan Laravel Pint untuk formatting PHP

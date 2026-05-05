@@ -747,8 +747,8 @@ git reset --hard HEAD~1
 ## Getting Help
 
 - **Documentation:** Check [docs/](docs/) folder
-- **Issues:** [GitHub Issues](https://github.com/nasirkhan/laravel-starter/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/nasirkhan/laravel-starter/discussions)
+- **Issues:** Use the repository Issues page.
+- **Discussions:** Use the repository Discussions page.
 
 ---
 

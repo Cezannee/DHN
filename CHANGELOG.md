@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to Laravel Starter will be documented in this file.
+All notable changes to Digi Herba Nusantara will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -118,6 +118,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Previous versions (before comprehensive changelog implementation)
 
-[Unreleased]: https://github.com/nasirkhan/laravel-starter/compare/v13.0.0...HEAD
-[13.0.0]: https://github.com/nasirkhan/laravel-starter/compare/v12.20.0...v13.0.0
-[12.20.0]: https://github.com/nasirkhan/laravel-starter/releases/tag/v12.20.0
+[Unreleased]: https://github.com/digi-herba-nusantara/digi-herba/compare/v13.0.0...HEAD
+[13.0.0]: https://github.com/digi-herba-nusantara/digi-herba/compare/v12.20.0...v13.0.0
+[12.20.0]: https://github.com/digi-herba-nusantara/digi-herba/releases/tag/v12.20.0

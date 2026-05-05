@@ -2,7 +2,7 @@
 
 **Last Updated:** February 3, 2026
 
-This document outlines security best practices implemented in Laravel Starter and recommendations for maintaining secure applications.
+This document outlines security best practices implemented in Digi Herba Nusantara and recommendations for maintaining secure applications.
 
 ---
 
@@ -729,12 +729,10 @@ AuditLog::create([
 
 ## Reporting Security Issues
 
-If you discover a security vulnerability in Laravel Starter, please email:
-
-**nasir8891@gmail.com**
+If you discover a security vulnerability in Digi Herba Nusantara, please report it privately to the project maintainer.
 
 Do not create public GitHub issues for security vulnerabilities.
 
 ---
 
-*This document is maintained as part of the Laravel Starter project. Last updated: February 3, 2026*
+*This document is maintained as part of the Digi Herba Nusantara project. Last updated: February 3, 2026*

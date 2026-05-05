@@ -4,7 +4,7 @@
 
 ---
 
-## laravel-starter (Core)
+## Digi Herba Nusantara (Core)
 
 ### 🔴 Critical
 

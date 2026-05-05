@@ -20,7 +20,7 @@ class StarterUpdateCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Update Cezanne: pull Composer packages, check module migrations, run migrations, and clear caches';
+    protected $description = 'Update Digi Herba Nusantara: pull Composer packages, check module migrations, run migrations, and clear caches';
 
     /**
      * Execute the console command.
@@ -46,7 +46,7 @@ class StarterUpdateCommand extends Command
         $this->newLine();
         $this->line('╔════════════════════════════════════════════════════╗');
         $this->line('║                                                    ║');
-        $this->line('║          <fg=bright-blue>Cezanne Update</>                          ║');
+        $this->line('║          <fg=bright-blue>Digi Herba Update</>                       ║');
         $this->line('║                                                    ║');
         $this->line('╚════════════════════════════════════════════════════╝');
         $this->newLine();

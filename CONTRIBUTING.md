@@ -1,6 +1,6 @@
-# Contributing to Laravel Starter
+# Contributing to Digi Herba Nusantara
 
-Thank you for considering contributing to Laravel Starter! This document provides guidelines for contributing to the project.
+Thank you for considering contributing to Digi Herba Nusantara! This document provides guidelines for contributing to the project.
 
 ## Table of Contents
 - [Code of Conduct](#code-of-conduct)
@@ -48,7 +48,7 @@ Before creating bug reports, please check existing issues to avoid duplicates.
 - **Steps to reproduce** the issue
 - **Expected vs actual behavior**
 - **Environment details:**
-  - Laravel Starter version
+  - Digi Herba Nusantara version
   - Laravel version
   - PHP version
   - Operating system
@@ -61,7 +61,7 @@ Before creating bug reports, please check existing issues to avoid duplicates.
 ## Bug: User profile update fails
 
 **Environment:**
-- Laravel Starter: 13.0.0
+- Digi Herba Nusantara: 13.0.0
 - Laravel: 13.0
 - PHP: 8.4
 - OS: Windows 11
@@ -122,8 +122,8 @@ See [Pull Request Process](#pull-request-process) below.
 1. **Fork the repository**
    ```bash
    # Fork on GitHub, then clone your fork
-   git clone https://github.com/YOUR_USERNAME/laravel-starter.git
-   cd laravel-starter
+   git clone https://github.com/YOUR_USERNAME/digi-herba.git
+   cd digi-herba
    ```
 
 2. **Install dependencies**
@@ -174,15 +174,15 @@ See [Pull Request Process](#pull-request-process) below.
 
 ### Working with Module-Manager Package (Optional)
 
-If you need to work on both laravel-starter and module-manager:
+If you need to work on both this project and module-manager:
 
 ```bash
 # Clone module-manager in parent directory
 cd ..
-git clone https://github.com/nasirkhan/module-manager.git
+git clone <module-manager-repository-url>
 
 # Link local package
-cd laravel-starter
+cd digi-herba
 composer config repositories.module-manager path "../module-manager"
 composer require nasirkhan/module-manager:@dev
 ```
@@ -576,17 +576,14 @@ Modules/MyModule/
 
 ## Questions?
 
-- **General questions:** Use [GitHub Discussions](https://github.com/nasirkhan/laravel-starter/discussions)
-- **Bug reports:** Use [GitHub Issues](https://github.com/nasirkhan/laravel-starter/issues)
-- **Security issues:** Email nasir8891@gmail.com
+- **General questions:** Use the repository Discussions page.
+- **Bug reports:** Use the repository Issues page.
+- **Security issues:** Report privately to the project maintainer.
 
 ---
 
 ## Recognition
 
-Contributors will be recognized in:
-- README.md contributors section
-- Release notes
-- GitHub contributors graph
+Contributions may be acknowledged in release notes when appropriate.
 
-Thank you for making Laravel Starter better! 🙏
+Thank you for making Digi Herba Nusantara better!

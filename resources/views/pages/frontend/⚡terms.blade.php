@@ -21,10 +21,7 @@ new #[Layout('layouts::frontend')] #[Title('Terms and Conditions')] class extend
     <section class="mx-auto max-w-screen-xl bg-white p-6 text-gray-600 sm:p-20">
         <div class="grid grid-cols-1">
             <p>Welcome to {{ app_name() }}!</p>
-            <p>
-                <a href="https://github.com/Cezannee" target="_blank">Cezanne</a>
-                maintains {{ app_name() }}. This service is provided by Cezanne and is intended for use as is.
-            </p>
+            <p>{{ app_name() }} is maintained by {{ $company_name }}. This service is provided as is.</p>
             <p>
                 These terms and conditions outline the rules and regulations for the use of {{ $company_name }}'s
                 Website, located at
