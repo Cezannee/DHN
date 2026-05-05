@@ -390,7 +390,7 @@ new class extends Component {
 <div>
     <x-cube::header-block :title="$title" />
 
-    <section class="mx-auto max-w-screen-xl bg-white p-6 text-gray-600 sm:p-20">
+    <section class="mx-auto max-w-7xl bg-white p-6 text-gray-600 sm:p-20">
         <div class="grid grid-cols-1">
             <p>Welcome to {{ app_name() }}!</p>
             <p>
