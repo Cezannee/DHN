@@ -16,7 +16,7 @@
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}" />
 
-        <title>@yield("title") | {{ config("app.name") }}</title>
+        <title>@yield("title") | {{ app_name() }}</title>
 
         <script src="{{ asset("vendor/jquery/jquery-3.6.4.min.js") }}"></script>
 

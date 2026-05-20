@@ -746,14 +746,4 @@ git reset --hard HEAD~1
 
 ## Getting Help
 
-- **Documentation:** Check [docs/](docs/) folder
-- **Issues:** Use the repository Issues page.
-- **Discussions:** Use the repository Discussions page.
-
----
-
-## Contributing
-
-Found an issue with this upgrade guide? Submit a PR to improve it!
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Check the [docs/](docs/) folder for additional project documentation.

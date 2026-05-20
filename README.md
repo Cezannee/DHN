@@ -161,7 +161,3 @@ This project is configured with Laravel Sail (https://laravel.com/docs/sail). Yo
 6. Run the command `sail artisan migrate --seed`
 7. Link storage directory: `sail artisan storage:link`
 8. Since Sail is already up, you can just visit http://localhost:80
-
-
-# Reporting a Vulnerability
-If you discover any security-related issues, report them to the project maintainer.

@@ -29,6 +29,38 @@ initializeSidebar();
 // Also initialize on DOMContentLoaded to be safe
 document.addEventListener('DOMContentLoaded', initializeSidebar);
 
+function syncMediaListField(select) {
+    const target = document.getElementById(select.dataset.mediaListSelect);
+    if (!target) return;
+
+    target.value = Array.from(select.selectedOptions)
+        .map((option) => option.value)
+        .join('\n');
+    target.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+function initializeMediaListFields() {
+    document.querySelectorAll('[data-media-list-select]').forEach((select) => {
+        if (select.dataset.mediaListReady === 'true') return;
+
+        select.dataset.mediaListReady = 'true';
+        select.addEventListener('change', () => syncMediaListField(select));
+    });
+
+    document.querySelectorAll('[data-media-list-apply]').forEach((button) => {
+        if (button.dataset.mediaListReady === 'true') return;
+
+        button.dataset.mediaListReady = 'true';
+        button.addEventListener('click', () => {
+            const select = document.querySelector(`[data-media-list-select="${button.dataset.mediaListApply}"]`);
+            if (select) syncMediaListField(select);
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', initializeMediaListFields);
+initializeMediaListFields();
+
 // Enable tooltips everywhere
 const tooltipTriggerList = document.querySelectorAll('[data-toggle="tooltip"]')
 const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new coreui.Tooltip(tooltipTriggerEl))

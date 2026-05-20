@@ -16,7 +16,11 @@ if (! function_exists('app_name')) {
      */
     function app_name(): string
     {
-        return config('app.name');
+        try {
+            return (string) setting('app_name', config('app.name'));
+        } catch (\Throwable) {
+            return (string) config('app.name');
+        }
     }
 }
 
@@ -29,7 +33,82 @@ if (! function_exists('app_url')) {
      */
     function app_url(): string
     {
-        return config('app.url');
+        try {
+            return (string) (setting('website_url') ?: config('app.url'));
+        } catch (\Throwable) {
+            return (string) config('app.url');
+        }
+    }
+}
+
+/*
+ * Global helpers file with misc functions.
+ */
+if (! function_exists('site_name')) {
+    /**
+     * Helper to grab the public site name.
+     */
+    function site_name(): string
+    {
+        return (string) (setting('meta_site_name') ?: app_name());
+    }
+}
+
+/*
+ * Global helpers file with misc functions.
+ */
+if (! function_exists('site_description')) {
+    /**
+     * Helper to grab the public site description.
+     */
+    function site_description(): string
+    {
+        return (string) (setting('meta_description') ?: setting('app_description'));
+    }
+}
+
+if (! function_exists('setting_media_items')) {
+    /**
+     * Parse newline or comma separated media paths from settings.
+     */
+    function setting_media_items(string $key, array $allowed_extensions = []): array
+    {
+        $raw_value = setting($key);
+
+        if (is_array($raw_value)) {
+            $paths = $raw_value;
+        } else {
+            $paths = preg_split('/[\r\n,]+/', (string) $raw_value) ?: [];
+        }
+
+        $allowed_extensions = array_map('strtolower', $allowed_extensions);
+
+        return collect($paths)
+            ->map(fn ($path) => trim((string) $path, " \t\n\r\0\x0B\"'"))
+            ->filter()
+            ->reject(fn ($path) => Str::startsWith(Str::lower($path), ['javascript:', 'data:']))
+            ->map(function ($path) use ($allowed_extensions) {
+                $media_path = parse_url($path, PHP_URL_PATH) ?: $path;
+                $extension = Str::lower(pathinfo($media_path, PATHINFO_EXTENSION));
+
+                if ($allowed_extensions !== [] && ! in_array($extension, $allowed_extensions, true)) {
+                    return null;
+                }
+
+                $is_video = in_array($extension, ['mp4', 'webm', 'ogg'], true);
+                $is_remote = Str::startsWith($path, ['http://', 'https://', '//']);
+
+                return [
+                    'path' => $path,
+                    'url' => $is_remote ? $path : asset(ltrim($path, '/')),
+                    'type' => $is_video ? 'video' : 'image',
+                    'extension' => $extension,
+                    'label' => pathinfo($media_path, PATHINFO_FILENAME) ?: basename($media_path),
+                ];
+            })
+            ->filter()
+            ->values()
+            ->all();
     }
 }
 

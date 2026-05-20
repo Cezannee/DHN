@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Http\Controllers\Backend\SettingController;
 use App\Models\User;
 use App\Observers\UserObserver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
@@ -55,6 +57,17 @@ class AppServiceProvider extends ServiceProvider
          */
         Gate::before(function ($user, $ability) {
             return $user->hasRole('super admin') ? true : null;
+        });
+
+        // The Settings module registers these routes without the web middleware.
+        $this->app->booted(function (): void {
+            Route::middleware(['web', 'auth', 'can:view_backend', 'can:edit_settings'])
+                ->prefix('admin')
+                ->as('backend.')
+                ->group(function (): void {
+                    Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
+                    Route::post('settings', [SettingController::class, 'store'])->name('settings.store');
+                });
         });
     }
 

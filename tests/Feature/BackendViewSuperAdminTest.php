@@ -5,6 +5,9 @@ namespace Tests\Feature;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\File;
+use Nasirkhan\ModuleManager\Modules\Settings\Models\Setting;
 use Tests\TestCase;
 
 class BackendViewSuperAdminTest extends TestCase
@@ -60,6 +63,8 @@ class BackendViewSuperAdminTest extends TestCase
         $response = $this->get('/admin/settings');
 
         $response->assertStatus(200);
+        $response->assertDontSee('name=" show_credit"', false);
+        $response->assertSee('name="show_credit"', false);
     }
 
     public function test_super_admin_user_can_udpate_settings(): void
@@ -80,6 +85,142 @@ class BackendViewSuperAdminTest extends TestCase
         $response = $this->postJson(route('backend.settings.store'), $fields_data);
 
         $response->assertStatus(302);
+    }
+
+    public function test_super_admin_user_settings_changes_are_persisted(): void
+    {
+        $fields_data = [];
+
+        foreach (config('settings.setting_fields') as $section => $fields) {
+            foreach ($fields['elements'] as $field) {
+                $fields_data[$field['name']] = $field['value'];
+            }
+        }
+
+        $fields_data['app_name'] = 'Digi Herba Updated';
+        $fields_data['show_credit'] = '1';
+        $fields_data['show_theme_dropdown'] = '0';
+        $fields_data['website_url'] = 'https://digi-herba.test';
+
+        $response = $this->post(route('backend.settings.store'), $fields_data);
+
+        $response->assertRedirect();
+        $this->assertSame('Digi Herba Updated', Setting::get('app_name'));
+        $this->assertSame('1', Setting::get('show_credit'));
+        $this->assertFalse(Setting::get('show_theme_dropdown'));
+        $this->assertSame('Digi Herba Updated', app_name());
+        $this->assertSame('https://digi-herba.test', app_url());
+    }
+
+    public function test_super_admin_user_can_upload_home_background_media(): void
+    {
+        $fields_data = [];
+
+        foreach (config('settings.setting_fields') as $section => $fields) {
+            foreach ($fields['elements'] as $field) {
+                $fields_data[$field['name']] = $field['value'];
+            }
+        }
+
+        $fields_data['home_background_media'] = 'background/existing.jpg';
+        $fields_data['home_background_media_uploads'] = [
+            UploadedFile::fake()->create('herbal-bg.jpg', 128, 'image/jpeg'),
+        ];
+
+        $response = $this->post(route('backend.settings.store'), $fields_data);
+
+        $response->assertRedirect();
+
+        $mediaPaths = preg_split('/[\r\n]+/', Setting::get('home_background_media')) ?: [];
+        $uploadedPath = collect($mediaPaths)->first(fn ($path) => str_starts_with($path, 'background/') && $path !== 'background/existing.jpg');
+
+        $this->assertContains('background/existing.jpg', $mediaPaths);
+        $this->assertNotNull($uploadedPath);
+        $this->assertTrue(File::exists(public_path($uploadedPath)));
+
+        File::delete(public_path($uploadedPath));
+    }
+
+    public function test_super_admin_user_can_upload_home_gallery_images(): void
+    {
+        $fields_data = [];
+
+        foreach (config('settings.setting_fields') as $section => $fields) {
+            foreach ($fields['elements'] as $field) {
+                $fields_data[$field['name']] = $field['value'];
+            }
+        }
+
+        $fields_data['home_gallery_images'] = 'galeri produk/existing.jpg';
+        $fields_data['home_gallery_images_uploads'] = [
+            UploadedFile::fake()->create('produk-herbal.jpg', 128, 'image/jpeg'),
+        ];
+
+        $response = $this->post(route('backend.settings.store'), $fields_data);
+
+        $response->assertRedirect();
+
+        $mediaPaths = preg_split('/[\r\n]+/', Setting::get('home_gallery_images')) ?: [];
+        $uploadedPath = collect($mediaPaths)->first(fn ($path) => str_starts_with($path, 'galeri produk/') && $path !== 'galeri produk/existing.jpg');
+
+        $this->assertContains('galeri produk/existing.jpg', $mediaPaths);
+        $this->assertNotNull($uploadedPath);
+        $this->assertTrue(File::exists(public_path($uploadedPath)));
+
+        File::delete(public_path($uploadedPath));
+    }
+
+    public function test_settings_home_media_lists_show_delete_controls(): void
+    {
+        Setting::add('home_background_media', 'background/delete-control-preview.jpg');
+        Setting::add('home_gallery_images', 'galeri produk/delete-control-preview.jpg');
+
+        $response = $this->get('/admin/settings');
+
+        $response->assertStatus(200);
+        $response->assertSee('name="delete_media[home_background_media][]"', false);
+        $response->assertSee('name="delete_media[home_gallery_images][]"', false);
+        $response->assertSeeText('Hapus media dicentang');
+    }
+
+    public function test_super_admin_user_can_delete_home_background_media(): void
+    {
+        $mediaPath = 'background/delete-test-'.uniqid().'.jpg';
+
+        File::ensureDirectoryExists(public_path('background'));
+        File::put(public_path($mediaPath), 'test');
+
+        $fields_data = $this->settingsPayload();
+        $fields_data['home_background_media'] = "background/keep.jpg\n{$mediaPath}";
+        $fields_data['delete_media'] = [
+            'home_background_media' => [$mediaPath],
+        ];
+
+        $response = $this->post(route('backend.settings.store'), $fields_data);
+
+        $response->assertRedirect();
+        $this->assertFalse(File::exists(public_path($mediaPath)));
+        $this->assertSame('background/keep.jpg', Setting::get('home_background_media'));
+    }
+
+    public function test_super_admin_user_can_delete_home_gallery_image(): void
+    {
+        $mediaPath = 'galeri produk/delete-test-'.uniqid().'.jpg';
+
+        File::ensureDirectoryExists(public_path('galeri produk'));
+        File::put(public_path($mediaPath), 'test');
+
+        $fields_data = $this->settingsPayload();
+        $fields_data['home_gallery_images'] = "galeri produk/keep.jpg\n{$mediaPath}";
+        $fields_data['delete_media'] = [
+            'home_gallery_images' => [$mediaPath],
+        ];
+
+        $response = $this->post(route('backend.settings.store'), $fields_data);
+
+        $response->assertRedirect();
+        $this->assertFalse(File::exists(public_path($mediaPath)));
+        $this->assertSame('galeri produk/keep.jpg', Setting::get('home_gallery_images'));
     }
 
     public function test_except_super_admin_user_can_not_udpate_settings(): void
@@ -278,5 +419,18 @@ class BackendViewSuperAdminTest extends TestCase
         $user->delete();
 
         $this->assertModelMissing($user);
+    }
+
+    private function settingsPayload(): array
+    {
+        $fields_data = [];
+
+        foreach (config('settings.setting_fields') as $section => $fields) {
+            foreach ($fields['elements'] as $field) {
+                $fields_data[$field['name']] = $field['value'];
+            }
+        }
+
+        return $fields_data;
     }
 }

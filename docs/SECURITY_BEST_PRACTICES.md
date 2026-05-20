@@ -727,12 +727,4 @@ AuditLog::create([
 
 ---
 
-## Reporting Security Issues
-
-If you discover a security vulnerability in Digi Herba Nusantara, please report it privately to the project maintainer.
-
-Do not create public GitHub issues for security vulnerabilities.
-
----
-
 *This document is maintained as part of the Digi Herba Nusantara project. Last updated: February 3, 2026*

@@ -1,21 +1,70 @@
+@php
+    $heroBackgroundMedia = setting_media_items('home_background_media', [
+        'jpg',
+        'jpeg',
+        'png',
+        'gif',
+        'webp',
+        'svg',
+        'mp4',
+        'webm',
+        'ogg',
+    ]);
+    $galleryImages = setting_media_items('home_gallery_images', ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg']);
+@endphp
+
 <div>
-    <section class="bg-white dark:bg-gray-800">
-        <div class="mx-auto max-w-7xl px-4 py-24 text-center sm:px-12">
+    <section class="relative overflow-hidden bg-white dark:bg-gray-900">
+        @if ($heroBackgroundMedia !== [])
+            <div
+                class="absolute inset-0 z-0 bg-white dark:bg-gray-900"
+                data-home-background-slider
+                aria-hidden="true"
+            >
+                @foreach ($heroBackgroundMedia as $media)
+                    <div
+                        class="home-hero-slide absolute inset-0 {{ $loop->first ? 'is-active' : '' }}"
+                        data-home-background-slide
+                    >
+                        @if ($media['type'] === 'video')
+                            <video
+                                class="h-full w-full object-cover"
+                                muted
+                                loop
+                                playsinline
+                                preload="metadata"
+                                @if ($loop->first) autoplay @endif
+                            >
+                                <source src="{{ $media['url'] }}" type="video/{{ $media['extension'] }}" />
+                            </video>
+                        @else
+                            <img
+                                class="h-full w-full object-cover"
+                                src="{{ $media['url'] }}"
+                                alt=""
+                            />
+                        @endif
+                    </div>
+                @endforeach
+            </div>
+        @endif
+
+        <div class="relative z-10 mx-auto max-w-7xl px-4 py-24 text-center sm:px-12">
             <div class="m-6 flex justify-center">
-                <img class="h-24 rounded-sm" src="{{ asset('img/logo-square.jpg') }}" alt="{{ app_name() }}" />
+                <img class="h-24 rounded-sm" src="{{ asset('img/logo-square.jpg') }}" alt="{{ site_name() }}" />
             </div>
             <h1
                 class="mb-6 text-4xl font-extrabold leading-none tracking-tight text-gray-900 sm:text-6xl dark:text-white"
             >
-                {{ app_name() }}
+                {{ site_name() }}
             </h1>
             <p class="mb-10 text-lg font-normal text-gray-500 sm:px-16 sm:text-2xl xl:px-48 dark:text-gray-400">
-                {!! setting('app_description') !!}
+                {!! site_description() !!}
             </p>
             <div class="mb-8 flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-x-4 sm:space-y-0 lg:mb-16">
                 <a
                     class="inline-flex items-center justify-center rounded-lg bg-gray-700 px-5 py-3 text-center text-base font-medium text-white hover:bg-gray-800 focus:ring-4 focus:ring-gray-300"
-                    href="{{ setting('website_url') ?: config('app.url') }}"
+                    href="{{ app_url() }}"
                     target="_blank"
                 >
                     <svg
@@ -39,7 +88,7 @@
                 </a>
                 <a
                     class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-5 py-3 text-center text-base font-medium text-gray-900 hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:border-gray-700 dark:text-gray-700 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-800"
-                    href="{{ setting('website_url') ?: config('app.url') }}"
+                    href="{{ app_url() }}"
                     target="_blank"
                 >
                     <svg
@@ -73,51 +122,39 @@
         </div>
     </section>
 
-    <section class="bg-gray-100 py-20 text-gray-600 dark:bg-gray-700 dark:text-gray-400">
-        <div class="container mx-auto flex flex-col items-center justify-center px-5">
-            <div class="w-full text-center lg:w-2/3">
-                <h1 class="mb-4 text-3xl font-medium text-gray-800 sm:text-4xl dark:text-gray-200">
-                    {{ __('Screenshots of the project') }}
-                </h1>
+    @if ($galleryImages !== [])
+        <section class="bg-gray-100 py-20 text-gray-600 dark:bg-gray-700 dark:text-gray-400">
+            <div class="container mx-auto flex flex-col items-center justify-center px-5">
+                <div class="w-full text-center lg:w-2/3">
+                    <h1 class="mb-4 text-3xl font-medium text-gray-800 sm:text-4xl dark:text-gray-200">
+                        Galeri Produk
+                    </h1>
 
-                <p class="mb-8 leading-relaxed">
-                    In the following section we listed a number of screenshots of different parts of the project,
-                    {{ app_name() }}.
-                </p>
+                    <p class="mb-8 leading-relaxed">
+                        Dokumentasi produk dari {{ site_name() }}.
+                    </p>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="bg-gray-50 pb-20 dark:bg-gray-700">
-        <div class="grid grid-cols-1 gap-4 p-5 sm:grid-cols-2">
-            <div class="rounded-lg p-3 shadow-lg sm:p-10 dark:bg-gray-800">
-                <img
-                    loading="lazy"
-                    src="{{ asset('img/default_banner.jpg') }}"
-                    alt="Page preview"
-                />
+        <section class="bg-gray-50 pb-20 dark:bg-gray-700">
+            <div class="mx-auto grid max-w-7xl grid-cols-1 gap-5 p-5 sm:grid-cols-2 lg:grid-cols-3">
+                @foreach ($galleryImages as $image)
+                    <a
+                        class="group block overflow-hidden rounded-lg bg-white shadow-lg dark:bg-gray-800"
+                        href="{{ $image['url'] }}"
+                        target="_blank"
+                        rel="noopener"
+                    >
+                        <img
+                            class="aspect-[4/3] w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                            loading="lazy"
+                            src="{{ $image['url'] }}"
+                            alt="Galeri Produk {{ $loop->iteration }} {{ site_name() }}"
+                        />
+                    </a>
+                @endforeach
             </div>
-            <div class="rounded-lg p-3 shadow-lg sm:p-10 dark:bg-gray-800">
-                <img
-                    loading="lazy"
-                    src="{{ asset('img/logo-with-text.jpg') }}"
-                    alt="Page preview"
-                />
-            </div>
-            <div class="rounded-lg p-3 shadow-lg sm:p-10 dark:bg-gray-800">
-                <img
-                    loading="lazy"
-                    src="{{ asset('img/logo-square.jpg') }}"
-                    alt="Page preview"
-                />
-            </div>
-            <div class="rounded-lg p-3 shadow-lg sm:p-10 dark:bg-gray-800">
-                <img
-                    loading="lazy"
-                    src="{{ asset('img/default_banner.jpg') }}"
-                    alt="Page preview"
-                />
-            </div>
-        </div>
-    </section>
+        </section>
+    @endif
 </div>

@@ -15,4 +15,13 @@
 /* Dark mode variant configuration for Tailwind v4 */
 @variant dark (&:where(.dark, .dark *));
 
+.home-hero-slide {
+    opacity: 0;
+    transition: opacity 1000ms ease;
+}
+
+.home-hero-slide.is-active {
+    opacity: 0.5;
+}
+
 /* @import '/node_modules/@fortawesome/fontawesome-free/css/all.min.css'; */

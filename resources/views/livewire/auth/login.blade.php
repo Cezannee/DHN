@@ -1,8 +1,12 @@
 <div class="flex flex-col gap-6">
-    <x-cube::auth-header
-        :title="__('Log in to your account')"
-        :description="__('Enter your email and password below to log in')"
-    />
+    <div class="flex w-full flex-col text-center">
+        <h1 class="text-2xl font-semibold text-zinc-900 dark:text-white">
+            {{ __("Log in to your account") }}
+        </h1>
+        <h3 class="text-zinc-600 dark:text-white">
+            {{ __("Enter your email and password below to log in") }}
+        </h3>
+    </div>
 
     <!-- Session Status -->
     <x-cube::auth-session-status class="text-center" :status="session('status')" />
@@ -23,7 +27,7 @@
             <x-cube::checkbox wire:model="remember">{{ __('Remember me') }}</x-cube::checkbox>
 
             @if (Route::has("password.request"))
-                <x-cube::link class="text-sm" :href="route('password.request')" wire:navigate>
+                <x-cube::link class="text-sm text-zinc-700 dark:text-white dark:hover:text-white" :href="route('password.request')" wire:navigate>
                     {{ __("Forgot your password?") }}
                 </x-cube::link>
             @endif

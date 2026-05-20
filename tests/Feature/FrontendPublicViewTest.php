@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Nasirkhan\ModuleManager\Modules\Settings\Models\Setting;
 use Tests\TestCase;
 
 class FrontendPublicViewTest extends TestCase
@@ -20,6 +21,41 @@ class FrontendPublicViewTest extends TestCase
         $response->assertSeeText($value, $escxaped = true);
     }
 
+    public function test_homepage_uses_application_meta_settings(): void
+    {
+        Setting::add('app_name', 'Old App Name');
+        Setting::add('app_description', 'Old app description.');
+        Setting::add('meta_site_name', 'Digi Herba Nusantara');
+        Setting::add('meta_description', 'Perusahaan herbal Indonesia.');
+
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+        $response->assertSeeText('Digi Herba Nusantara');
+        $response->assertSeeText('Perusahaan herbal Indonesia.');
+        $response->assertDontSeeText('Old App Name');
+        $response->assertDontSeeText('Old app description.');
+        $response->assertSee('property="og:site_name" content="Digi Herba Nusantara"', false);
+        $response->assertSee('property="og:description" content="Perusahaan herbal Indonesia."', false);
+    }
+
+    public function test_homepage_uses_configured_home_media_settings(): void
+    {
+        Setting::add('home_background_media', "img/default_banner.jpg\nimg/logo-with-text.jpg");
+        Setting::add('home_gallery_images', "img/logo-square.jpg\nimg/logo.jpg");
+
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+        $response->assertSee('data-home-background-slider', false);
+        $response->assertSee('img/default_banner.jpg', false);
+        $response->assertSee('img/logo-with-text.jpg', false);
+        $response->assertSeeText('Galeri Produk');
+        $response->assertDontSeeText('Screenshots of the project');
+        $response->assertSee('img/logo-square.jpg', false);
+        $response->assertSee('img/logo.jpg', false);
+    }
+
     public function test_login_page_public_view(): void
     {
         $response = $this->get('/login');
@@ -29,6 +65,9 @@ class FrontendPublicViewTest extends TestCase
         $value = __('Log in');
 
         $response->assertSeeText($value, $escxaped = true);
+        $response->assertSee('id="theme-toggle"', false);
+        $response->assertSee('id="theme-toggle-dark-icon"', false);
+        $response->assertSee('id="theme-toggle-light-icon"', false);
     }
 
     public function test_registration_page_public_view(): void

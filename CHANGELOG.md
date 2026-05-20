@@ -5,9 +5,9 @@ All notable changes to Digi Herba Nusantara will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## Unreleased
 
-## [13.0.0] - 2026-02-26
+## 13.0.0 - 2026-02-26
 
 ### Added
 - Health check command (`starter:health-check`) with feature tests
@@ -37,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Outdated documentation files
 - Deprecated frontend components replaced by `cube` namespace equivalents
 
-## [12.20.0] - 2026-02-10
+## 12.20.0 - 2026-02-10
 
 ### Added
 - Updateability strategy implementation following Laravel's native override pattern
@@ -45,7 +45,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Livewire v4 component standardization
 - Comprehensive CHANGELOG.md for version tracking
 - UPGRADE.md guide for version migrations
-- CONTRIBUTING.md for contributor guidelines
 - `starter:install` command for streamlined setup
 - Local package development support via composer path repository
 - Module management commands (publish, status, diff)
@@ -114,10 +113,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Clear directory structure
 - Modular code organization
 
-## [2.x] - 2024
+## 2.x - 2024
 
 Previous versions (before comprehensive changelog implementation)
-
-[Unreleased]: https://github.com/digi-herba-nusantara/digi-herba/compare/v13.0.0...HEAD
-[13.0.0]: https://github.com/digi-herba-nusantara/digi-herba/compare/v12.20.0...v13.0.0
-[12.20.0]: https://github.com/digi-herba-nusantara/digi-herba/releases/tag/v12.20.0

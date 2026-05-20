@@ -333,4 +333,4 @@ For PhpStorm users, enable Laravel plugin:
 
 ---
 
-*This document is part of Laravel Starter. For issues or suggestions, please open an issue on GitHub.*
+*This document is part of the Digi Herba Nusantara project.*

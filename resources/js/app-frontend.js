@@ -58,11 +58,57 @@ function initThemeToggle() {
     });
 }
 
+function activateHomeBackgroundSlide(slides, activeIndex) {
+    slides.forEach((slide, index) => {
+        const video = slide.querySelector('video');
+        const isActive = index === activeIndex;
+
+        slide.classList.toggle('is-active', isActive);
+
+        if (!video) return;
+
+        if (isActive) {
+            video.play().catch(() => {});
+        } else {
+            video.pause();
+        }
+    });
+}
+
+function initHomeBackgroundSliders() {
+    document.querySelectorAll('[data-home-background-slider]').forEach((slider) => {
+        if (slider.dataset.homeBackgroundReady === 'true') return;
+
+        const slides = Array.from(slider.querySelectorAll('[data-home-background-slide]'));
+        if (!slides.length) return;
+
+        slider.dataset.homeBackgroundReady = 'true';
+
+        let activeIndex = 0;
+        const interval = Number(slider.dataset.homeBackgroundInterval || 7000);
+
+        activateHomeBackgroundSlide(slides, activeIndex);
+
+        if (slides.length < 2) return;
+
+        const timerId = window.setInterval(() => {
+            if (!document.body.contains(slider)) {
+                window.clearInterval(timerId);
+                return;
+            }
+
+            activeIndex = (activeIndex + 1) % slides.length;
+            activateHomeBackgroundSlide(slides, activeIndex);
+        }, Number.isFinite(interval) && interval > 0 ? interval : 7000);
+    });
+}
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
     setInitialTheme();
     updateThemeToggleIcons();
     initThemeToggle();
+    initHomeBackgroundSliders();
 });
 
 // Re-initialize Flowbite components after Livewire navigation (SPA-like page transitions)
@@ -70,9 +116,11 @@ document.addEventListener('livewire:navigated', () => {
     initFlowbite();
     updateThemeToggleIcons();
     initThemeToggle();
+    initHomeBackgroundSliders();
 });
 
 // Re-initialize Flowbite components after Livewire updates the DOM (for dynamic content)
 document.addEventListener('livewire:update', () => {
     initFlowbite();
+    initHomeBackgroundSliders();
 });

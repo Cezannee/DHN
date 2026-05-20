@@ -83,6 +83,48 @@ return [
                 ],
             ],
         ],
+        'home' => [
+            'title' => 'Home',
+            'desc' => 'Media shown on the public home page.',
+            'icon' => 'fa-solid fa-house',
+
+            'elements' => [
+                [
+                    'type' => 'media-list',
+                    'data' => 'text',
+                    'name' => 'home_background_media',
+                    'label' => 'Home Background Media',
+                    'rules' => 'nullable|string',
+                    'class' => '',
+                    'value' => '',
+                    'media' => 'mixed',
+                    'directories' => [
+                        'background',
+                    ],
+                    'upload' => true,
+                    'upload_name' => 'home_background_media_uploads',
+                    'upload_directory' => 'background',
+                    'help' => 'Pilih gambar atau video lokal untuk background home. Satu path per baris. Mendukung: jpg, jpeg, png, gif, webp, svg, mp4, webm, ogg.',
+                ],
+                [
+                    'type' => 'media-list',
+                    'data' => 'text',
+                    'name' => 'home_gallery_images',
+                    'label' => 'Galeri Produk',
+                    'rules' => 'nullable|string',
+                    'class' => '',
+                    'value' => '',
+                    'media' => 'image',
+                    'directories' => [
+                        'galeri produk',
+                    ],
+                    'upload' => true,
+                    'upload_name' => 'home_gallery_images_uploads',
+                    'upload_directory' => 'galeri produk',
+                    'help' => 'Pilih atau upload foto galeri produk yang tampil di halaman home. File baru disimpan ke folder public/galeri produk. Satu path gambar per baris.',
+                ],
+            ],
+        ],
         'email' => [
             'title' => 'Email',
             'desc' => 'Email settings for app',
