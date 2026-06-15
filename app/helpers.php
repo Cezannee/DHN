@@ -18,7 +18,7 @@ if (! function_exists('app_name')) {
     {
         try {
             return (string) setting('app_name', config('app.name'));
-        } catch (\Throwable) {
+        } catch (Throwable) {
             return (string) config('app.name');
         }
     }
@@ -35,7 +35,7 @@ if (! function_exists('app_url')) {
     {
         try {
             return (string) (setting('website_url') ?: config('app.url'));
-        } catch (\Throwable) {
+        } catch (Throwable) {
             return (string) config('app.url');
         }
     }
