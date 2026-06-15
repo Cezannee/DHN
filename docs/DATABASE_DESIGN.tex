@@ -1,0 +1,538 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf-8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{booktabs}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Digi Herba - Database Design}
+\lhead{ERD, LRS \& Transformasi}
+\cfoot{\thepage}
+
+\title{\textbf{Desain Database Digi Herba}\\Entity-Relationship Diagram, Logical Record Structure, \& Transformasi}
+\author{Backend Architecture Documentation}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\newpage
+
+\tableofcontents
+\newpage
+
+% ============================================================================
+\section{Entity-Relationship Diagram (ERD)}
+% ============================================================================
+
+\subsection{Deskripsi Entitas Utama}
+
+Berikut adalah entitas-entitas utama dalam sistem Digi Herba:
+
+\subsubsection{Entitas Core}
+\begin{enumerate}
+    \item \textbf{Users} - Menyimpan data pengguna aplikasi
+    \item \textbf{Sessions} - Menyimpan session pengguna yang aktif
+    \item \textbf{Password Reset Tokens} - Token untuk reset password
+    \item \textbf{User Providers} - Integrasi social login
+\end{enumerate}
+
+\subsubsection{Entitas Otorisasi \& Permissions}
+\begin{enumerate}
+    \item \textbf{Roles} - Peran pengguna (admin, user, moderator, dll)
+    \item \textbf{Permissions} - Izin/akses spesifik
+    \item \textbf{Model Has Roles} - Relasi many-to-many Users \& Roles
+    \item \textbf{Model Has Permissions} - Relasi many-to-many Users \& Permissions
+    \item \textbf{Role Has Permissions} - Relasi many-to-many Roles \& Permissions
+\end{enumerate}
+
+\subsubsection{Entitas Media \& Notifikasi}
+\begin{enumerate}
+    \item \textbf{Media} - File/gambar polymorphic (users, products, dll)
+    \item \textbf{Notifications} - Notifikasi polymorphic untuk users
+\end{enumerate}
+
+\subsubsection{Entitas Sistem}
+\begin{enumerate}
+    \item \textbf{Cache} - Penyimpanan cache
+    \item \textbf{Cache Locks} - Lock mechanism untuk cache
+    \item \textbf{Jobs} - Queue untuk background jobs
+    \item \textbf{Job Batches} - Batch processing jobs
+    \item \textbf{Failed Jobs} - Pencatatan job yang gagal
+\end{enumerate}
+
+\subsection{Diagram Relasi Entitas}
+
+\begin{verbatim}
+┌─────────────────────────────────────────────────────────────────┐
+│                         USERS                                   │
+│  id (PK) | name | email | password | status | created_at | ... │
+└────────────────────────┬──────────────────────────────────────┬─┘
+                         │                                      │
+         ┌───────────────┼─────────────┬──────────────────────┐ │
+         │               │             │                      │ │
+    (1:N)│          (1:N)│        (1:N)│                  (1:N)│ │
+┌────────▼──────┐ ┌──────▼────────┐ ┌──▼──────────┐ ┌────────▼──────┐
+│   SESSIONS    │ │ USER_PROVIDERS│ │ MODEL_HAS_  │ │   NOTIFICATIONS
+│               │ │               │ │   ROLES     │ │
+│  id (PK)      │ │ id (PK)       │ │             │ │ id (UUID, PK)
+│  user_id (FK) │ │ user_id (FK)  │ │ model_id    │ │ notifiable_id
+│  ip_address   │ │ provider      │ │ role_id(FK) │ │ notifiable_type
+│  user_agent   │ │ provider_id   │ │             │ │ data
+│  payload      │ │ avatar        │ │ model_type  │ │ read_at
+└───────────────┘ │ created_at    │ └─────────────┘ │ created_at
+                  └───────────────┘                  └────────────────┘
+                           │
+                           │ (1:N)
+                  ┌────────▼──────────┐
+                  │       MEDIA       │
+                  │                   │
+                  │ id (PK)           │
+                  │ model_id          │
+                  │ model_type        │
+                  │ collection_name   │
+                  │ file_name         │
+                  │ mime_type         │
+                  │ size              │
+                  └───────────────────┘
+
+┌─────────────────────────────────────────┐
+│             ROLES                       │
+│ id (PK) | name | guard_name | created_at│
+└────────────────┬────────────────────────┘
+            (1:N)│
+                 ├──────────────┬───────────────┐
+                 │              │               │
+        ┌────────▼────────┐ ┌───▼──────────┐   │
+        │ MODEL_HAS_ROLES │ │ ROLE_HAS_    │   │
+        │                 │ │ PERMISSIONS  │   │
+        │ role_id (FK)    │ │              │   │
+        │ model_id        │ │ role_id(FK)  │   │
+        │ model_type      │ │ permission_  │   │
+        │                 │ │ id(FK)       │   │
+        └─────────────────┘ └───┬──────────┘   │
+                                │              │
+                        ┌───────▼────────┐     │
+                        │  PERMISSIONS   │     │
+                        │                │     │
+                        │ id (PK)        │     │
+                        │ name           │◄────┤
+                        │ guard_name     │     │
+                        │ created_at     │     │
+                        └────────────────┘     │
+                                               │ (1:N)
+                        ┌──────────────────────┘
+                        │
+                   ┌────▼──────────────────┐
+                   │ MODEL_HAS_PERMISSIONS │
+                   │                       │
+                   │ permission_id (FK)    │
+                   │ model_id              │
+                   │ model_type            │
+                   └───────────────────────┘
+\end{verbatim}
+
+\newpage
+
+% ============================================================================
+\section{Logical Record Structure (LRS)}
+% ============================================================================
+
+Logical Record Structure mendeskripsikan bagaimana data disimpan secara logis dalam bentuk tabel/file.
+
+\subsection{Struktur Tabel Utama}
+
+\subsubsection{USERS}
+\begin{tabularx}{\textwidth}{|l|l|l|l|X|}
+\hline
+\textbf{Atribut} & \textbf{Tipe} & \textbf{Constraint} & \textbf{Indexed} & \textbf{Keterangan} \\
+\hline
+id & BIGINT & PK, AUTO\_INCREMENT & Yes & Primary Key \\
+\hline
+name & VARCHAR(255) & NOT NULL & No & Nama lengkap pengguna \\
+\hline
+email & VARCHAR(255) & UNIQUE, NOT NULL & Yes & Email unik \\
+\hline
+email\_verified\_at & TIMESTAMP & NULLABLE & No & Waktu verifikasi email \\
+\hline
+password & VARCHAR(255) & NOT NULL & No & Password terenkripsi \\
+\hline
+remember\_token & VARCHAR(100) & NULLABLE & No & Token remember me \\
+\hline
+created\_at & TIMESTAMP & DEFAULT CURRENT\_TIMESTAMP & No & Waktu dibuat \\
+\hline
+updated\_at & TIMESTAMP & DEFAULT CURRENT\_TIMESTAMP & No & Waktu diupdate \\
+\hline
+\end{tabularx}
+
+\subsubsection{SESSIONS}
+\begin{tabularx}{\textwidth}{|l|l|l|l|X|}
+\hline
+\textbf{Atribut} & \textbf{Tipe} & \textbf{Constraint} & \textbf{Indexed} & \textbf{Keterangan} \\
+\hline
+id & VARCHAR(255) & PK & Yes & Session ID \\
+\hline
+user\_id & BIGINT & FK (Users.id), NULLABLE & Yes & Referensi User \\
+\hline
+ip\_address & VARCHAR(45) & NULLABLE & No & IP address \\
+\hline
+user\_agent & TEXT & NULLABLE & No & User agent browser \\
+\hline
+payload & LONGTEXT & NOT NULL & No & Data session \\
+\hline
+last\_activity & INT & NOT NULL, INDEXED & Yes & Unix timestamp \\
+\hline
+\end{tabularx}
+
+\subsubsection{USER\_PROVIDERS}
+\begin{tabularx}{\textwidth}{|l|l|l|l|X|}
+\hline
+\textbf{Atribut} & \textbf{Tipe} & \textbf{Constraint} & \textbf{Indexed} & \textbf{Keterangan} \\
+\hline
+id & BIGINT & PK, AUTO\_INCREMENT & Yes & Primary Key \\
+\hline
+user\_id & BIGINT & FK (Users.id), NOT NULL & Yes & Referensi User \\
+\hline
+provider & VARCHAR(255) & NOT NULL & Yes & Provider (google, github, etc) \\
+\hline
+provider\_id & VARCHAR(255) & NOT NULL & Yes & ID dari provider \\
+\hline
+avatar & VARCHAR(255) & NULLABLE & No & Avatar URL \\
+\hline
+created\_at & TIMESTAMP & DEFAULT CURRENT\_TIMESTAMP & No & Waktu dibuat \\
+\hline
+updated\_at & TIMESTAMP & DEFAULT CURRENT\_TIMESTAMP & No & Waktu diupdate \\
+\hline
+\end{tabularx}
+
+\subsubsection{ROLES}
+\begin{tabularx}{\textwidth}{|l|l|l|l|X|}
+\hline
+\textbf{Atribut} & \textbf{Tipe} & \textbf{Constraint} & \textbf{Indexed} & \textbf{Keterangan} \\
+\hline
+id & BIGINT & PK, AUTO\_INCREMENT & Yes & Primary Key \\
+\hline
+name & VARCHAR(125) & NOT NULL, UNIQUE & Yes & Nama role \\
+\hline
+guard\_name & VARCHAR(125) & NOT NULL & Yes & Guard name \\
+\hline
+created\_at & TIMESTAMP & DEFAULT CURRENT\_TIMESTAMP & No & Waktu dibuat \\
+\hline
+updated\_at & TIMESTAMP & DEFAULT CURRENT\_TIMESTAMP & No & Waktu diupdate \\
+\hline
+\end{tabularx}
+
+\subsubsection{PERMISSIONS}
+\begin{tabularx}{\textwidth}{|l|l|l|l|X|}
+\hline
+\textbf{Atribut} & \textbf{Tipe} & \textbf{Constraint} & \textbf{Indexed} & \textbf{Keterangan} \\
+\hline
+id & BIGINT & PK, AUTO\_INCREMENT & Yes & Primary Key \\
+\hline
+name & VARCHAR(125) & NOT NULL, UNIQUE & Yes & Nama permission \\
+\hline
+guard\_name & VARCHAR(125) & NOT NULL & Yes & Guard name \\
+\hline
+created\_at & TIMESTAMP & DEFAULT CURRENT\_TIMESTAMP & No & Waktu dibuat \\
+\hline
+updated\_at & TIMESTAMP & DEFAULT CURRENT\_TIMESTAMP & No & Waktu diupdate \\
+\hline
+\end{tabularx}
+
+\subsubsection{MODEL\_HAS\_ROLES}
+\begin{tabularx}{\textwidth}{|l|l|l|l|X|}
+\hline
+\textbf{Atribut} & \textbf{Tipe} & \textbf{Constraint} & \textbf{Indexed} & \textbf{Keterangan} \\
+\hline
+role\_id & BIGINT & FK (Roles.id), PK & Yes & Referensi Role \\
+\hline
+model\_type & VARCHAR(255) & PK & No & Tipe model (App\textbackslash Models\textbackslash User) \\
+\hline
+model\_id & BIGINT & PK & Yes & ID dari model \\
+\hline
+\end{tabularx}
+
+\subsubsection{MODEL\_HAS\_PERMISSIONS}
+\begin{tabularx}{\textwidth}{|l|l|l|l|X|}
+\hline
+\textbf{Atribut} & \textbf{Tipe} & \textbf{Constraint} & \textbf{Indexed} & \textbf{Keterangan} \\
+\hline
+permission\_id & BIGINT & FK (Permissions.id), PK & Yes & Referensi Permission \\
+\hline
+model\_type & VARCHAR(255) & PK & No & Tipe model \\
+\hline
+model\_id & BIGINT & PK & Yes & ID dari model \\
+\hline
+\end{tabularx}
+
+\subsubsection{ROLE\_HAS\_PERMISSIONS}
+\begin{tabularx}{\textwidth}{|l|l|l|l|X|}
+\hline
+\textbf{Atribut} & \textbf{Tipe} & \textbf{Constraint} & \textbf{Indexed} & \textbf{Keterangan} \\
+\hline
+permission\_id & BIGINT & FK (Permissions.id), PK & Yes & Referensi Permission \\
+\hline
+role\_id & BIGINT & FK (Roles.id), PK & Yes & Referensi Role \\
+\hline
+\end{tabularx}
+
+\subsubsection{MEDIA}
+\begin{tabularx}{\textwidth}{|l|l|l|l|X|}
+\hline
+\textbf{Atribut} & \textbf{Tipe} & \textbf{Constraint} & \textbf{Indexed} & \textbf{Keterangan} \\
+\hline
+id & BIGINT & PK, AUTO\_INCREMENT & Yes & Primary Key \\
+\hline
+model\_type & VARCHAR(255) & NOT NULL & Yes & Tipe model polymorphic \\
+\hline
+model\_id & BIGINT & NOT NULL & Yes & ID model polymorphic \\
+\hline
+uuid & UUID & NULLABLE, UNIQUE & Yes & UUID unik media \\
+\hline
+collection\_name & VARCHAR(255) & NOT NULL & No & Nama koleksi \\
+\hline
+name & VARCHAR(255) & NOT NULL & No & Nama file \\
+\hline
+file\_name & VARCHAR(255) & NOT NULL & No & Nama file lengkap \\
+\hline
+mime\_type & VARCHAR(255) & NULLABLE & No & MIME type \\
+\hline
+disk & VARCHAR(255) & NOT NULL & No & Disk storage \\
+\hline
+size & BIGINT & NOT NULL & No & Ukuran file \\
+\hline
+created\_at & TIMESTAMP & DEFAULT CURRENT\_TIMESTAMP & No & Waktu dibuat \\
+\hline
+updated\_at & TIMESTAMP & DEFAULT CURRENT\_TIMESTAMP & No & Waktu diupdate \\
+\hline
+\end{tabularx}
+
+\subsubsection{NOTIFICATIONS}
+\begin{tabularx}{\textwidth}{|l|l|l|l|X|}
+\hline
+\textbf{Atribut} & \textbf{Tipe} & \textbf{Constraint} & \textbf{Indexed} & \textbf{Keterangan} \\
+\hline
+id & UUID & PK & Yes & UUID notification \\
+\hline
+type & VARCHAR(255) & NOT NULL & No & Tipe notifikasi \\
+\hline
+notifiable\_type & VARCHAR(255) & NOT NULL & Yes & Tipe model polymorphic \\
+\hline
+notifiable\_id & BIGINT & NOT NULL & Yes & ID model polymorphic \\
+\hline
+data & TEXT/JSON & NOT NULL & No & Data notifikasi \\
+\hline
+read\_at & TIMESTAMP & NULLABLE & No & Waktu dibaca \\
+\hline
+created\_at & TIMESTAMP & DEFAULT CURRENT\_TIMESTAMP & No & Waktu dibuat \\
+\hline
+updated\_at & TIMESTAMP & DEFAULT CURRENT\_TIMESTAMP & No & Waktu diupdate \\
+\hline
+\end{tabularx}
+
+\newpage
+
+% ============================================================================
+\section{Transformasi ERD ke Logical Relational Schema}
+% ============================================================================
+
+\subsection{Aturan Transformasi Umum}
+
+Transformasi dari Entity-Relationship Diagram ke Logical Relational Schema mengikuti aturan-aturan umum berikut:
+
+\begin{enumerate}
+    \item \textbf{Setiap Entitas menjadi Relasi (Tabel)}
+    \item \textbf{Setiap Atribut menjadi Kolom}
+    \item \textbf{Primary Key dipertahankan}
+    \item \textbf{Relasi Many-to-Many dikonversi menjadi tabel junction}
+    \item \textbf{Foreign Key menunjukkan relasi}
+\end{enumerate}
+
+\subsection{Proses Transformasi Digi Herba}
+
+\subsubsection{1. Entitas Menjadi Relasi}
+
+\noindent\textbf{ERD:} Entitas USERS dengan atribut (id, name, email, password, etc)
+
+\noindent\textbf{LRS:}
+\begin{verbatim}
+USERS (id, name, email, email_verified_at, password, remember_token, 
+       created_at, updated_at)
+PK: id
+\end{verbatim}
+
+\subsubsection{2. Relasi One-to-Many (1:N)}
+
+\noindent\textbf{ERD:} USERS (1) ----- (N) SESSIONS
+
+\noindent\textbf{Transformasi:} Foreign Key dari SESSIONS menunjuk ke USERS
+
+\noindent\textbf{LRS:}
+\begin{verbatim}
+SESSIONS (id, user_id, ip_address, user_agent, payload, last_activity)
+PK: id
+FK: user_id REFERENCES USERS(id)
+\end{verbatim}
+
+\subsubsection{3. Relasi Many-to-Many (N:M)}
+
+\noindent\textbf{ERD:} USERS (N) ---- (N) ROLES
+
+\noindent\textbf{Transformasi:} Membuat tabel junction (MODEL\_HAS\_ROLES)
+
+\noindent\textbf{LRS:}
+\begin{verbatim}
+MODEL_HAS_ROLES (role_id, model_type, model_id)
+PK: (role_id, model_type, model_id)
+FK: role_id REFERENCES ROLES(id)
+      model_id REFERENCES USERS(id) [when model_type = 'App\Models\User']
+\end{verbatim}
+
+\subsubsection{4. Atribut Multivalued (ROLES memiliki banyak PERMISSIONS)}
+
+\noindent\textbf{ERD:} ROLES (N) ---- (N) PERMISSIONS
+
+\noindent\textbf{Transformasi:} Tabel junction ROLE\_HAS\_PERMISSIONS
+
+\noindent\textbf{LRS:}
+\begin{verbatim}
+ROLE_HAS_PERMISSIONS (permission_id, role_id)
+PK: (permission_id, role_id)
+FK: permission_id REFERENCES PERMISSIONS(id)
+    role_id REFERENCES ROLES(id)
+\end{verbatim}
+
+\subsubsection{5. Relasi Polymorphic (MEDIA ke berbagai model)}
+
+\noindent\textbf{ERD:} MEDIA (1) ----- (N) [USERS, PRODUCTS, etc]
+
+\noindent\textbf{Transformasi:} Dua kolom untuk mengidentifikasi model (model\_type, model\_id)
+
+\noindent\textbf{LRS:}
+\begin{verbatim}
+MEDIA (id, model_type, model_id, uuid, collection_name, name, 
+       file_name, mime_type, disk, size, created_at, updated_at)
+PK: id
+UNIQUE: uuid
+INDEX: (model_type, model_id)
+
+Polymorphic relationship:
+  - model_type = 'App\Models\User' → model_id REFERENCES USERS(id)
+  - model_type = 'App\Models\Product' → model_id REFERENCES PRODUCTS(id)
+\end{verbatim}
+
+\subsection{Foreign Key Constraints}
+
+Semua Foreign Key dalam Logical Relational Schema:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Tabel} & \textbf{FK Kolom} & \textbf{Referensi} & \textbf{Action} \\
+\hline
+SESSIONS & user\_id & USERS(id) & ON DELETE CASCADE \\
+\hline
+USER\_PROVIDERS & user\_id & USERS(id) & ON DELETE CASCADE \\
+\hline
+MODEL\_HAS\_ROLES & role\_id & ROLES(id) & ON DELETE CASCADE \\
+\hline
+MODEL\_HAS\_PERMISSIONS & permission\_id & PERMISSIONS(id) & ON DELETE CASCADE \\
+\hline
+ROLE\_HAS\_PERMISSIONS & permission\_id & PERMISSIONS(id) & ON DELETE CASCADE \\
+\hline
+ROLE\_HAS\_PERMISSIONS & role\_id & ROLES(id) & ON DELETE CASCADE \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Normalisasi Database}
+
+Database Digi Herba telah dinormalisasi hingga \textbf{3rd Normal Form (3NF)}:
+
+\begin{enumerate}
+    \item \textbf{1NF (First Normal Form)}
+    \begin{itemize}
+        \item Setiap kolom berisi atomic value (tidak ada repeating group)
+        \item Semua tabel memiliki primary key
+        \item \textcolor{green}{✓ Terpenuhi}
+    \end{itemize}
+    
+    \item \textbf{2NF (Second Normal Form)}
+    \begin{itemize}
+        \item Sudah 1NF
+        \item Setiap non-key attribute bergantung penuh pada primary key
+        \item \textcolor{green}{✓ Terpenuhi}
+    \end{itemize}
+    
+    \item \textbf{3NF (Third Normal Form)}
+    \begin{itemize}
+        \item Sudah 2NF
+        \item Tidak ada transitive dependency
+        \item Setiap atribut hanya bergantung pada primary key
+        \item \textcolor{green}{✓ Terpenuhi}
+    \end{itemize}
+\end{enumerate}
+
+\newpage
+
+% ============================================================================
+\section{Ringkasan Transformasi}
+% ============================================================================
+
+\subsection{Mapping Entitas ERD ke Tabel LRS}
+
+\begin{table}[h]
+\centering
+\begin{tabularx}{\textwidth}{|l|l|c|X|}
+\hline
+\textbf{ERD Entitas} & \textbf{LRS Tabel} & \textbf{Tipe} & \textbf{Catatan} \\
+\hline
+USERS & USERS & Entity & Core entity \\
+\hline
+SESSIONS & SESSIONS & Entity & 1:N with USERS \\
+\hline
+PASSWORD\_RESET\_TOKENS & PASSWORD\_RESET\_TOKENS & Entity & Transient data \\
+\hline
+USER\_PROVIDERS & USER\_PROVIDERS & Entity & 1:N with USERS \\
+\hline
+ROLES & ROLES & Entity & Authorization \\
+\hline
+PERMISSIONS & PERMISSIONS & Entity & Authorization \\
+\hline
+USERS $\leftrightarrow$ ROLES & MODEL\_HAS\_ROLES & Junction & N:M relationship \\
+\hline
+USERS $\leftrightarrow$ PERMISSIONS & MODEL\_HAS\_PERMISSIONS & Junction & N:M relationship \\
+\hline
+ROLES $\leftrightarrow$ PERMISSIONS & ROLE\_HAS\_PERMISSIONS & Junction & N:M relationship \\
+\hline
+MEDIA & MEDIA & Entity & Polymorphic (1:N) \\
+\hline
+NOTIFICATIONS & NOTIFICATIONS & Entity & Polymorphic (1:N) \\
+\hline
+CACHE & CACHE & System & System table \\
+\hline
+JOBS & JOBS & System & Queue system \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsection{Catatan Penting}
+
+\begin{itemize}
+    \item \textbf{Polymorphic Relationships:} Menggunakan kombinasi \texttt{model\_type} dan \texttt{model\_id} untuk menunjuk ke berbagai model
+    \item \textbf{Cascade Delete:} Foreign keys menggunakan ON DELETE CASCADE untuk menjaga integritas referensial
+    \item \textbf{Indexing:} Semua primary key, foreign key, dan kolom yang sering di-query di-index
+    \item \textbf{Timestamps:} Setiap tabel memiliki \texttt{created\_at} dan \texttt{updated\_at} untuk audit trail
+    \item \textbf{UUID:} Media dan Notifications menggunakan UUID untuk keamanan dan skalabilitas
+\end{itemize}
+
+\end{document}

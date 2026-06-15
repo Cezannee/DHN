@@ -4,6 +4,7 @@ use App\Http\Controllers\Backend\BackendController;
 use App\Http\Controllers\Backend\NotificationsController;
 use App\Http\Controllers\Backend\RolesController;
 use App\Http\Controllers\Backend\UserController as BackendUserController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\LanguageController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +26,9 @@ require __DIR__.'/auth.php';
 
 // home route
 Route::livewire('home', 'pages::frontend.home')->name('home');
+Route::post('contact', [ContactController::class, 'send'])
+    ->middleware('throttle:5,1')
+    ->name('contact.send');
 
 // Language Switch
 Route::get('language/{language}', [LanguageController::class, 'switch'])->name('language.switch');

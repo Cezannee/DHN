@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
 
         // Always run Menu seeder (essential for navigation)
         $this->callEssentialModuleSeeders();
+        $this->call(RemoveDemoDropdownMenuSeeder::class);
 
         // Only run dummy data seeders if enabled
         if ($this->shouldSeedDummyData()) {

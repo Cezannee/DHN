@@ -1,0 +1,33 @@
+flowchart LR
+    subgraph ERD[ERD]
+        E1[Entitas USERS]
+        E2[Entitas ROLES]
+        E3[Entitas PERMISSIONS]
+        R1[Relasi 1:N USERS ke USER_PROVIDERS]
+        R2[Relasi N:M USERS ke ROLES]
+        R3[Relasi N:M ROLES ke PERMISSIONS]
+        R4[Relasi Polymorphic USERS ke MEDIA, NOTIFICATIONS, ACTIVITY_LOG]
+    end
+
+    subgraph RULE[Aturan Transformasi]
+        T1[Entitas menjadi tabel]
+        T2[Atribut menjadi kolom]
+        T3[Primary key tetap menjadi PK]
+        T4[Relasi 1:N menaruh FK di sisi N]
+        T5[Relasi N:M menjadi tabel junction]
+        T6[Polymorphic memakai pasangan type dan id]
+    end
+
+    subgraph LRS[LRS]
+        L1[USERS(id PK, email UK, status, created_by FK)]
+        L2[USER_PROVIDERS(id PK, user_id FK)]
+        L3[MODEL_HAS_ROLES(role_id PK/FK, model_type PK, model_id PK)]
+        L4[ROLE_HAS_PERMISSIONS(permission_id PK/FK, role_id PK/FK)]
+        L5[MEDIA(model_type, model_id), NOTIFICATIONS(notifiable_type, notifiable_id)]
+    end
+
+    E1 --> T1 --> L1
+    R1 --> T4 --> L2
+    R2 --> T5 --> L3
+    R3 --> T5 --> L4
+    R4 --> T6 --> L5

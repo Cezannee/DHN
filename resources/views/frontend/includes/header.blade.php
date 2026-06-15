@@ -366,7 +366,10 @@
         </div>
 
         <div class="hidden w-full items-center justify-between md:order-1 md:flex md:w-auto" id="top-navbar">
-            <x-menu-dynamic-menu location="frontend-header" />
+            <x-menu-dynamic-menu
+                location="frontend-header"
+                css-class="flex flex-col gap-2 md:flex-row md:items-center md:gap-8"
+            />
         </div>
     </div>
 </nav>

@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1050" viewBox="0 0 1500 1050">
+  <defs>
+    <style>
+      .bg{fill:#f7f8fb}.title{font:700 30px Arial, sans-serif;fill:#162033}.sub{font:400 15px Arial, sans-serif;fill:#586274}
+      .tbl{fill:#fff;stroke:#27364f;stroke-width:2;rx:8}.hdr{fill:#27364f}.htext{font:700 14px Arial, sans-serif;fill:#fff}
+      .field{font:12.5px Consolas, monospace;fill:#162033}.pk{fill:#fff8e7;stroke:#d39b17;stroke-width:1}.fk{fill:#eef7ff;stroke:#1b80b6;stroke-width:1}
+      .rel{stroke:#52647a;stroke-width:2;fill:none;marker-end:url(#arrow)}.dash{stroke-dasharray:7 6}.note{font:12px Arial, sans-serif;fill:#586274}
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#52647a"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="1500" height="1050"/>
+  <text x="50" y="55" class="title">Logical Record Structure (LRS) - Digi Herba</text>
+  <text x="50" y="82" class="sub">Struktur record logis dari tabel utama dan tabel pendukung berdasarkan migration project.</text>
+
+  <g transform="translate(540 125)">
+    <rect class="tbl" width="420" height="292"/>
+    <rect class="hdr" width="420" height="34" rx="8"/>
+    <text x="16" y="23" class="htext">USERS</text>
+    <rect class="pk" x="14" y="50" width="392" height="24"/><text x="24" y="67" class="field">PK id BIGINT AUTO_INCREMENT</text>
+    <text x="24" y="96" class="field">UK email VARCHAR(255), username VARCHAR(255)</text>
+    <text x="24" y="120" class="field">name, first_name, last_name</text>
+    <text x="24" y="144" class="field">password, remember_token</text>
+    <text x="24" y="168" class="field">mobile, gender, date_of_birth</text>
+    <text x="24" y="192" class="field">address, bio, social_profiles JSON, avatar</text>
+    <text x="24" y="216" class="field">last_ip, login_count, last_login, status</text>
+    <rect class="fk" x="14" y="232" width="392" height="44"/><text x="24" y="250" class="field">FK created_by, updated_by, deleted_by</text><text x="24" y="270" class="field">references users.id</text>
+  </g>
+
+  <g transform="translate(70 135)">
+    <rect class="tbl" width="350" height="138"/>
+    <rect class="hdr" width="350" height="34" rx="8"/><text x="16" y="23" class="htext">SESSIONS</text>
+    <rect class="pk" x="14" y="50" width="322" height="24"/><text x="24" y="67" class="field">PK id VARCHAR(255)</text>
+    <rect class="fk" x="14" y="82" width="322" height="24"/><text x="24" y="99" class="field">FK user_id -> users.id</text>
+    <text x="24" y="126" class="field">ip_address, user_agent, payload, last_activity</text>
+  </g>
+
+  <g transform="translate(70 315)">
+    <rect class="tbl" width="350" height="138"/>
+    <rect class="hdr" width="350" height="34" rx="8"/><text x="16" y="23" class="htext">USER_PROVIDERS</text>
+    <rect class="pk" x="14" y="50" width="322" height="24"/><text x="24" y="67" class="field">PK id BIGINT</text>
+    <rect class="fk" x="14" y="82" width="322" height="24"/><text x="24" y="99" class="field">FK user_id -> users.id</text>
+    <text x="24" y="126" class="field">provider, provider_id, avatar, timestamps</text>
+  </g>
+
+  <g transform="translate(70 495)">
+    <rect class="tbl" width="350" height="114"/>
+    <rect class="hdr" width="350" height="34" rx="8"/><text x="16" y="23" class="htext">PASSWORD_RESET_TOKENS</text>
+    <rect class="pk" x="14" y="50" width="322" height="24"/><text x="24" y="67" class="field">PK email VARCHAR(255)</text>
+    <text x="24" y="96" class="field">token, created_at</text>
+  </g>
+
+  <g transform="translate(1085 125)">
+    <rect class="tbl" width="330" height="114"/>
+    <rect class="hdr" width="330" height="34" rx="8"/><text x="16" y="23" class="htext">ROLES</text>
+    <rect class="pk" x="14" y="50" width="302" height="24"/><text x="24" y="67" class="field">PK id BIGINT</text>
+    <text x="24" y="96" class="field">UK name + guard_name, timestamps</text>
+  </g>
+
+  <g transform="translate(1085 290)">
+    <rect class="tbl" width="330" height="114"/>
+    <rect class="hdr" width="330" height="34" rx="8"/><text x="16" y="23" class="htext">PERMISSIONS</text>
+    <rect class="pk" x="14" y="50" width="302" height="24"/><text x="24" y="67" class="field">PK id BIGINT</text>
+    <text x="24" y="96" class="field">UK name + guard_name, timestamps</text>
+  </g>
+
+  <g transform="translate(520 470)">
+    <rect class="tbl" width="360" height="128"/>
+    <rect class="hdr" width="360" height="34" rx="8"/><text x="16" y="23" class="htext">MODEL_HAS_ROLES</text>
+    <rect class="pk" x="14" y="50" width="332" height="24"/><text x="24" y="67" class="field">PK role_id + model_id + model_type</text>
+    <rect class="fk" x="14" y="82" width="332" height="24"/><text x="24" y="99" class="field">FK role_id -> roles.id</text>
+    <text x="24" y="124" class="field">model_type = App\Models\User</text>
+  </g>
+
+  <g transform="translate(520 650)">
+    <rect class="tbl" width="410" height="128"/>
+    <rect class="hdr" width="410" height="34" rx="8"/><text x="16" y="23" class="htext">MODEL_HAS_PERMISSIONS</text>
+    <rect class="pk" x="14" y="50" width="382" height="24"/><text x="24" y="67" class="field">PK permission_id + model_id + model_type</text>
+    <rect class="fk" x="14" y="82" width="382" height="24"/><text x="24" y="99" class="field">FK permission_id -> permissions.id</text>
+    <text x="24" y="124" class="field">model_type = App\Models\User</text>
+  </g>
+
+  <g transform="translate(1015 515)">
+    <rect class="tbl" width="400" height="122"/>
+    <rect class="hdr" width="400" height="34" rx="8"/><text x="16" y="23" class="htext">ROLE_HAS_PERMISSIONS</text>
+    <rect class="pk" x="14" y="50" width="372" height="24"/><text x="24" y="67" class="field">PK permission_id + role_id</text>
+    <rect class="fk" x="14" y="82" width="372" height="28"/><text x="24" y="101" class="field">FK permission_id -> permissions.id, role_id -> roles.id</text>
+  </g>
+
+  <g transform="translate(70 670)">
+    <rect class="tbl" width="350" height="154"/>
+    <rect class="hdr" width="350" height="34" rx="8"/><text x="16" y="23" class="htext">MEDIA</text>
+    <rect class="pk" x="14" y="50" width="322" height="24"/><text x="24" y="67" class="field">PK id, UK uuid</text>
+    <rect class="fk" x="14" y="82" width="322" height="24"/><text x="24" y="99" class="field">model_type + model_id (polymorphic)</text>
+    <text x="24" y="126" class="field">collection_name, name, file_name, mime_type</text>
+    <text x="24" y="148" class="field">disk, size, JSON metadata, order_column</text>
+  </g>
+
+  <g transform="translate(520 840)">
+    <rect class="tbl" width="410" height="132"/>
+    <rect class="hdr" width="410" height="34" rx="8"/><text x="16" y="23" class="htext">NOTIFICATIONS</text>
+    <rect class="pk" x="14" y="50" width="382" height="24"/><text x="24" y="67" class="field">PK id UUID</text>
+    <rect class="fk" x="14" y="82" width="382" height="24"/><text x="24" y="99" class="field">notifiable_type + notifiable_id (polymorphic)</text>
+    <text x="24" y="124" class="field">type, data, read_at, timestamps</text>
+  </g>
+
+  <g transform="translate(1015 735)">
+    <rect class="tbl" width="400" height="154"/>
+    <rect class="hdr" width="400" height="34" rx="8"/><text x="16" y="23" class="htext">ACTIVITY_LOG</text>
+    <rect class="pk" x="14" y="50" width="372" height="24"/><text x="24" y="67" class="field">PK id BIGINT</text>
+    <rect class="fk" x="14" y="82" width="372" height="44"/><text x="24" y="100" class="field">subject_type/id, causer_type/id</text><text x="24" y="120" class="field">(nullable polymorphic)</text>
+    <text x="24" y="148" class="field">log_name, description, event, properties, batch_uuid</text>
+  </g>
+
+  <path class="rel" d="M540 230 H420"/><path class="rel" d="M540 355 H420"/>
+  <path class="rel" d="M750 417 V470"/><path class="rel" d="M750 417 V650"/>
+  <path class="rel" d="M960 190 H1085"/><path class="rel" d="M960 348 H1085"/>
+  <path class="rel" d="M880 535 H1085 V239"/><path class="rel" d="M930 714 H1085 V404"/>
+  <path class="rel" d="M1215 515 V404"/>
+  <path class="rel dash" d="M540 365 C430 480 440 710 420 745"/>
+  <path class="rel dash" d="M760 417 V840"/>
+  <path class="rel dash" d="M960 395 C1035 480 995 765 1015 810"/>
+  <path class="rel dash" d="M540 250 C440 300 445 530 420 552"/>
+  <text x="50" y="1005" class="note">Warna: kuning = primary key, biru = foreign key atau referensi polymorphic. Relasi dashed menunjukkan polymorphic atau relasi logis tanpa constraint FK database langsung.</text>
+</svg>

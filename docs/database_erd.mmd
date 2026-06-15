@@ -1,0 +1,105 @@
+erDiagram
+    USERS ||--o{ SESSIONS : has
+    USERS ||--o{ USER_PROVIDERS : has
+    USERS ||--o{ MEDIA : polymorphic_model
+    USERS ||--o{ NOTIFICATIONS : notifiable
+    USERS ||--o{ ACTIVITY_LOG : causer_subject
+    USERS ||--o{ USERS : created_updated_deleted_by
+
+    USERS ||--o{ MODEL_HAS_ROLES : assigned
+    ROLES ||--o{ MODEL_HAS_ROLES : assigned_to_model
+    USERS ||--o{ MODEL_HAS_PERMISSIONS : receives_direct
+    PERMISSIONS ||--o{ MODEL_HAS_PERMISSIONS : assigned_to_model
+    ROLES ||--o{ ROLE_HAS_PERMISSIONS : owns
+    PERMISSIONS ||--o{ ROLE_HAS_PERMISSIONS : granted
+
+    USERS {
+        bigint id PK
+        varchar username UK
+        varchar name
+        varchar first_name
+        varchar last_name
+        varchar email UK
+        varchar password
+        tinyint status
+        bigint created_by FK
+        bigint updated_by FK
+        bigint deleted_by FK
+    }
+
+    SESSIONS {
+        varchar id PK
+        bigint user_id FK
+        varchar ip_address
+        text user_agent
+        longtext payload
+        int last_activity
+    }
+
+    USER_PROVIDERS {
+        bigint id PK
+        bigint user_id FK
+        varchar provider
+        varchar provider_id
+        varchar avatar
+    }
+
+    ROLES {
+        bigint id PK
+        varchar name UK
+        varchar guard_name UK
+    }
+
+    PERMISSIONS {
+        bigint id PK
+        varchar name UK
+        varchar guard_name UK
+    }
+
+    MODEL_HAS_ROLES {
+        bigint role_id PK,FK
+        varchar model_type PK
+        bigint model_id PK
+    }
+
+    MODEL_HAS_PERMISSIONS {
+        bigint permission_id PK,FK
+        varchar model_type PK
+        bigint model_id PK
+    }
+
+    ROLE_HAS_PERMISSIONS {
+        bigint permission_id PK,FK
+        bigint role_id PK,FK
+    }
+
+    MEDIA {
+        bigint id PK
+        varchar model_type
+        bigint model_id
+        uuid uuid UK
+        varchar collection_name
+        varchar file_name
+        bigint size
+    }
+
+    NOTIFICATIONS {
+        uuid id PK
+        varchar type
+        varchar notifiable_type
+        bigint notifiable_id
+        text data
+        timestamp read_at
+    }
+
+    ACTIVITY_LOG {
+        bigint id PK
+        varchar log_name
+        text description
+        varchar subject_type
+        bigint subject_id
+        varchar causer_type
+        bigint causer_id
+        json properties
+        uuid batch_uuid
+    }
